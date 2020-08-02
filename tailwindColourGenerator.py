@@ -114,6 +114,10 @@ coloursDic = {
       }
 }
 
+aliases = {k: [] for k in coloursDic}
+aliases['gray'].append('grey');
+
+
 filename = 'tailwindColours.css'
 writeLine = lambda wf, s: wf.write(s + '\n')
 
@@ -121,14 +125,16 @@ def write_CSS_variables(wf: 'file for writing')->None:
     
     for name, colours in coloursDic.items():
 
-        assert(len(colours) == 9)
-        writeLine(wf, f'\t--{name}: {colours[500]};')
+        for _name in [name, *aliases.get(name, [])]:
+            
+            assert(len(colours) == 9)
+            writeLine(wf, f'\t--{_name}: {colours[500]};')
 
-        for key in range(100, 1000, 100):
+            for key in range(100, 1000, 100):
 
-            writeLine(wf, f'\t--{name}{key}: {colours[key]};')
+                writeLine(wf, f'\t--{_name}{key}: {colours[key]};')
 
-        writeLine(wf, '')
+            writeLine(wf, '')
     
 
 if __name__=='__main__':
